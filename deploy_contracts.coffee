@@ -47,7 +47,7 @@ async.series [
           stdout.splice(0, 4)
           abi = stdout.join("\n")
           contract.code = code
-          contract.abi = JSON.stringify(JSON.parse(abi))
+          contract.abi = JSON.parse(abi)
           callback(null, contract)
           #callback(null, stdout)
     , (err, results) ->

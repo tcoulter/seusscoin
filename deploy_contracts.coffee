@@ -34,15 +34,20 @@ async.series [
     async.mapSeries contracts, (contract, callback) ->
       file = contract.file
       console.log "Compiling #{file}..."
-      child_process.exec "solc --input-file #{file} --binary stdout --optimize on 2>&1", 
+      child_process.exec "solc --input-file #{file} --json-abi stdout --binary stdout --optimize on 2>&1", 
         cwd: process.cwd()
       , (err, stdout) ->
         if err?
           callback(err, stdout)
         else
-          code = stdout.trim().split("\n")
-          code = code[code.length - 1]
+          # We expect repeatable, structured output from solc. This isn't my favorite
+          # way of doing things, and could be better if I got web3.eth.compile.solidity working.
+          stdout = stdout.trim().split("\n")
+          code = stdout[2]
+          stdout.splice(0, 4)
+          abi = stdout.join("\n")
           contract.code = code
+          contract.abi = JSON.stringify(JSON.parse(abi))
           callback(null, contract)
           #callback(null, stdout)
     , (err, results) ->
@@ -93,9 +98,11 @@ async.series [
 
   addresses = {}
   for contract in contracts
-    addresses[contract.name] = contract.address
+    addresses[contract.name] = 
+      address: contract.address
+      abi: contract.abi
 
-  fs.writeFileSync(process.cwd() + "/config/addresses.json", JSON.stringify(addresses), {flag: "w+"})
+  fs.writeFileSync(process.cwd() + "/config/contracts.json", JSON.stringify(addresses), {flag: "w+"})
 
   console.log "Done!"
 

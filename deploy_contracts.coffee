@@ -4,64 +4,100 @@ web3 = require "web3"
 async = require "async"
 fs = require "fs"
 loadconfig = require("./lib/loadconfig")
-execSync = require("child_process").execSync
+child_process = require "child_process"
 
 config = loadconfig("/config/config.json")
 
-console.log "asdf"
-child = execSync "echo 'asdfasd'", (a, b, c) ->
-  console.log child
-  console.log a, b, c
-  console.log child.stdout.read()
-
-
-console.log "dddd"
-
 contracts = [
-  "./contracts/seusscoin.sol"
+  {name: "SeussCoin", file: "./contracts/seusscoin.sol"}
 ]
 
-# console.log "Setting provider..."
-web3.setProvider(new web3.providers.HttpProvider("http://#{config.private_eth.host}:#{config.private_eth.port}"))
+provider = new web3.providers.HttpProvider("http://#{config.private_eth.host}:#{config.private_eth.port}")
+coinbase = "0x0"
 
-# Compile the contracts
-async.mapSeries contracts, (file, callback) ->
-  console.log "Compiling #{file}..."
-  command = "solc --input-file #{file} --binary stdout --optimize on"
-  console.log command
-  console.log "----------"
-  exec("ls", (a, b, c) ->
-    console.log "a: " + a
-    console.log "b: " + b
-    console.log "c: " + c
-    callback(a, b)
-  )
-, (err, results) ->
-  if err?
-    console.log "ERROR compiling contract:"
-    console.log results[0]
-    process.exit(1)
+async.series [
+  (c) ->
+    # Working around this bug in web3:
+    # https://github.com/ethereum/web3.js/issues/156
+    console.log "Getting coinbase..."
+    provider.sendAsync
+      jsonrpc: "2.0"
+      method: "eth_coinbase"
+      params: []
+      id: 1
+    , (err, result) ->
+      coinbase = result.result
+      c()
 
-  console.log results
+  (c) ->
+    # Compile the contracts
+    async.mapSeries contracts, (contract, callback) ->
+      file = contract.file
+      console.log "Compiling #{file}..."
+      child_process.exec "solc --input-file #{file} --binary stdout --optimize on 2>&1", 
+        cwd: process.cwd()
+      , (err, stdout) ->
+        if err?
+          callback(err, stdout)
+        else
+          code = stdout.trim().split("\n")
+          code = code[code.length - 1]
+          contract.code = code
+          callback(null, contract)
+          #callback(null, stdout)
+    , (err, results) ->
+      if err?
+        console.log "ERROR compiling contract:"
+        console.log results[0]
+        process.exit(1)
+      else
+        contracts = results
+        c()
+  (c) ->
+    # Put them on the network
+    async.mapSeries contracts, (contract, callback) ->
+      console.log "Sending #{contract.file} to the network..."
+      code = contract.code
+      # web3.eth.sendTransaction doesn't seem to work...
+      provider.sendAsync
+        jsonrpc: "2.0"
+        method: "eth_sendTransaction"
+        params: [{
+          from: coinbase
+          gas: web3.toHex(100000) # I have no idea if these values are good.
+          gasPrice: web3.toHex(10000),
+          data: "0x#{code}"
+        }]
+        id: 1
+      , (err, result) ->
+        if err?
+          callback(err, result)
+        else
+          if result.error?
+            console.log "Error received from eth client:"
+            console.log result
+            process.exit(1)
 
-console.log "done"
+          contract.address = result.result
+          callback(err, contract)
 
-# # Put them on the network
-# console.log "Sending contracts to the network..."
-# async.eachSeries contracts, (code, callback) ->
-#   web3.eth.sendTransaction 
-#     from: web3.eth.coinbase
-#     code: code
-#   , callback
-# , (err, results) ->
-#   if err?
-#     console.log "ERROR sending contract:"
-#     thorw err
-#   else
-#     console.log results
+    , (err, results) ->
+      if err?
+        console.log "ERROR sending contract:"
+        c(err)
+      else
+        contracts = results
+        c()
+], (err) ->
+  console.log "Writing contract config..."
 
-# Web3 keeps the process open (Note: I *think* it's web3...)
-process.exit(0)
+  addresses = {}
+  for contract in contracts
+    addresses[contract.name] = contract.address
+
+  fs.writeFileSync(process.cwd() + "/config/contracts.json", JSON.stringify(addresses), {flag: "w+"})
+
+  console.log "Done!"
 
 
 

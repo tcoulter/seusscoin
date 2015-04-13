@@ -1,0 +1,135 @@
+<%= include("templates/header") %>
+
+<div class="top-wrapper">
+
+  <div class="fork">
+    Best in Chrome | <a href="https://github.com/tcoulter/seusscoin">Fork me on GitHub!</a>
+  </div>
+
+  <div class="container">
+
+    <div class="twelve-columns first">
+      <div class="seusscoin">
+        <div class="inner-one"></div>
+        <div class="inner-two"></div>
+        <div class="inner-three"></div>
+        <div class="seuss"></div>
+      </div>
+
+      <div class="seven columns stepbox">
+        <div class="step current">
+          <strong>Hello. Before we get started...</strong>
+          <p> 
+            This is an Ethereum app. What's Etheruem? <a href="#">See below!</a>
+          </p>
+          <p>
+            Since we're pre-genesis, we've gotta Scotch Tape some things together. Use <a href="https://github.com/ethereum/go-ethereum">geth</a> and connect to our network via our enode:
+
+            <pre>geth --networkid <%= config.public_eth.networkid %> -bootnodes="<%= config.public_eth.enode %>" -maxpeers 2 --unlock=primary</pre> 
+          </p>
+          <button id="step1" class="charcoal fill">Done!</a>
+        </div>
+        <div class="step">
+          <strong>Next, tell use how you connect to Ethereum.</strong>
+          <p>
+            Your web browser will use this information to make transactions on your behalf. No information is sent to <%= config.product_name %> servers.
+          </p>
+          <input id="input" type="text" placeholder="Example: 127.0.0.1:8545"></input>
+          <button id="step2" class="charcoal fill">Test Connection</button>
+        </div>
+        <div class="step">
+          <strong>Next, tell use how you connect to Ethereum.</strong>
+          <p>
+            Your web browser will use this information to make transactions on your behalf. No information is sent to <%= config.product_name %> servers.
+          </p>
+          <input id="input" type="text" placeholder="127.0.0.1:8454"></input>
+          <button id="step2" class="charcoal fill">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div> <!-- /top-wrapper -->
+
+<div class="divider"></div>
+
+<div class="container">
+  <div class="twelve columns">
+
+    <h5>What is Ethereum?</h5>
+    <p>
+      Ethereum is a revolutionary new computing mechanism that might just change our whole industry (and possibly our culture). <a href="http://www.ethereum.org" target="_blank">Read more here.</a> 
+    </p>
+
+    <h5>So what is <%= config.product_name %>?</h5>
+    <p>
+      A website based on Ethereum.
+    </p>
+
+    <h5>Alright. But what does it do?</h5>
+    <p>
+      <%= config.product_name %> uses Ethereum to create a new kind of token, also called <%= config.product_name %>. It's like a casino's poker chip: You can use it to buy things from the House (in this case, <%= config.product_name %>'s creator, <a href="https://twitter.com/timothyjcoulter" target="_blank">Tim Coulter</a>), but if you take it anywhere else -- like the drug store -- it holds no value at all.
+    </p>
+
+    <h5>Is it money?</h5>
+    <p>
+      Nope, not at all. You're gonna get funny looks if you try to pay for your groceries in <%= config.product_name %>.
+    </p>
+
+    <h5>Okay, then what can I get with it?</h5>
+    <p>
+      Currently, Tim accepts <%= config.product_name %> for the following items:
+
+      <ul>
+        <li>5 <%= config.product_name %> = 1 beer</li>
+        <li>10 <%= config.product_name %> = 1 pizza</li>
+      </ul>
+
+      Other <%= config.product_name %> trades may become available, so keep checking in!
+    </p>
+
+    <h5>How can I get <%= config.product_name %>?</h5>
+    <p>
+      You can do something nice for Tim, or get some free from <a href="#">the faucet</a>.
+    </p>
+
+    <h5>What's a faucet?</h5>
+    <p>
+      Well, in this case, it slowly provides you with free <%= config.product_name %>. If you start the app (see above), you can click a button and get 0.25 <%= config.product_name %> free per day!
+    </p>
+
+    <h5>What's all this talk about "pre-genesis"?</h5>
+    <p>
+      Ethereum's not officially released yet, so we won't be transacting on the same network. The only way for us to connect is to set it specifically, using our enode:
+
+      <pre>geth --networkid <%= config.public_eth.networkid %> -bootnodes="<%= config.public_eth.enode %>" -maxpeers 2 --unlock=primary</pre> 
+    </p>
+
+    <h5>Will I still have my <%= config.product_name %> once everything's "post" genesis?</h5>
+    <p>
+      Unfortunately no. So spend your <%= config.product_name %> now!
+    </p>
+
+    <h5>That sucks. Alright, so what's Seuss?</h5>
+    <p>
+      My girlfriend's cat.
+    </p>
+
+    <h5>Why did you make this site about your girlfriend's cat?</h5>
+    <p>
+      Because I needed to try my hand at building a distributed Ethereum-based application. Also, Seuss isn't a very accepting cat. Maybe she'll come around if we all accept Seuss(coin) first!
+    </p>
+    <p>
+      Also, Tim may just give you free <%= config.product_name %> to promote the Ethereum network as well as initiate good times between friends and coworkers.
+    </p>
+
+    <h5>Isn't the Ethereum network about decentralization and less trust? Do I have to trust Tim?</h5>
+    <p>
+      Do you trust a casino to exchange your chips for cash? If you don't trust Tim, you don't want <%= config.product_name %>!
+    </p>
+  </div>
+
+  <div class="divider"></div>
+</div>
+
+<%= include("templates/footer") %>

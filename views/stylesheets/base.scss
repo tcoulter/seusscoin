@@ -1,0 +1,169 @@
+$base-font-size: 10px;
+$baseline-unitless: 28/(16*($base-font-size/100%));
+$baseline: $baseline-unitless * 1rem;
+
+$font-name: "Sinkin Sans";
+$font: $font-name, sans-serif;
+
+@mixin vertical-align {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+html,
+:root {
+  font-family: $font;
+  font-size: $base-font-size;
+  line-height: $baseline-unitless;
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-font-feature-settings: "kern";
+  -moz-font-feature-settings: "kern";
+  -moz-font-feature-settings: "kern=1";
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+
+  background-color: $white;
+  color: $charcoal;
+
+  @media (max-width: 860px) {
+    font-size: $base-font-size*.9;
+  }
+
+  @media (max-width: 500px) {
+    font-size: $base-font-size*.8;
+  }
+
+  height: 100%;
+}
+
+body {
+  font-family: $font;
+  background: linear-gradient(-45deg, $lightgreen, $darkgreen);
+  background-repeat: no-repeat, repeat;
+  background-position: right bottom, 0 0;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  color: rgba(0,0,0,0.65);
+}
+
+@font-face {
+  font-family: 'Sinkin Sans';
+  src: url('/fonts/sinkinsans_800black_macroman/SinkinSans-800Black-webfont.eot');
+  src: url('/fonts/sinkinsans_800black_macroman/SinkinSans-800Black-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/sinkinsans_800black_macroman/SinkinSans-800Black-webfont.woff') format('woff'),
+       url('/fonts/sinkinsans_800black_macroman/SinkinSans-800Black-webfont.ttf') format('truetype'),
+       url('/fonts/sinkinsans_800black_macroman/SinkinSans-800Black-webfont.svg#sinkin_sans800_black') format('svg');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sinkin Sans';
+  src: url('/fonts/sinkinsans_600semibold_macroman/SinkinSans-600SemiBold-webfont.eot');
+  src: url('/fonts/sinkinsans_600semibold_macroman/SinkinSans-600SemiBold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/sinkinsans_600semibold_macroman/SinkinSans-600SemiBold-webfont.woff') format('woff'),
+       url('/fonts/sinkinsans_600semibold_macroman/SinkinSans-600SemiBold-webfont.ttf') format('truetype'),
+       url('/fonts/sinkinsans_600semibold_macroman/SinkinSans-600SemiBold-webfont.svg##sinkin_sans600_semibold') format('svg');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sinkin Sans';
+  src: url('/fonts/sinkinsans_400regular_macroman/SinkinSans-400Regular-webfont.eot');
+  src: url('/fonts/sinkinsans_400regular_macroman/SinkinSans-400Regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/sinkinsans_400regular_macroman/SinkinSans-400Regular-webfont.woff') format('woff'),
+       url('/fonts/sinkinsans_400regular_macroman/SinkinSans-400Regular-webfont.ttf') format('truetype'),
+       url('/fonts/sinkinsans_400regular_macroman/SinkinSans-400Regular-webfont.svg##sinkin_sans400_regular') format('svg');
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+.logo {
+  position: fixed;
+  left: 2rem;
+  top: 1rem;
+  font-weight: 800;
+  font-size: 2.4rem;
+  color: $white;
+  text-shadow: 3px 0px 3px rgba(0,0,0,0.2);
+}
+
+/* To size a dynamically size seusscoin, specify an equal width and height in rem: */
+/*   { width: 20rem; height: 20rem; } */
+/* Then specify the font-size in em, where the size must be (x/20), where x is the rem size: */
+/*   { width: 20rem; height: 20rem; font-size: 1em; } */
+.seusscoin {
+  border-radius: 50%;
+  background: $red;
+  position: relative;
+  box-shadow: 3px 0px 3px rgba(0,0,0,0.2);
+
+  .inner-one {
+    border-radius: 50%;
+    position: absolute;
+    border: dashed 1.35em $white;
+
+    width: 80%;
+    height: 80%;
+    position: relative;
+  }
+
+  .inner-two {
+    border-radius: 50%;
+    -moz-border-radius: 20% !important;
+    background: $red;
+    position: absolute;
+
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+  }
+
+  .inner-three {
+    border-radius: 50%;
+    background: $charcoal;
+    position: absolute;
+
+    width: 64%;
+    height: 64%;
+    top: 18%;
+    left: 18%;
+  }
+
+  .seuss {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+
+    background-image: url(/images/seuss.png);
+    background-position: 73% 50%;
+    background-size: 93% 93%;
+    background-repeat: no-repeat;
+  }
+}
+
+/* Conditional seusscoin css for firefox for an old bug they haven't fixed yet... */
+/* https://bugzilla.mozilla.org/show_bug.cgi?id=382721 */
+@-moz-document url-prefix() {
+  .seusscoin {
+    border-radius: 20%;
+
+    .inner-one {
+      border-radius: 20%;
+    }
+  }
+}

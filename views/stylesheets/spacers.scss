@@ -1,0 +1,33 @@
+.buffer{
+ @extend %buffer;
+}
+
+%buffer {
+  padding: $baseline/4;
+}
+
+.buffer-v{
+ @extend %buffer-v;
+}
+
+%buffer-v {
+  padding: $baseline/4 0;
+}
+
+.buffer-h{
+ @extend %buffer-h;
+}
+
+%buffer-h {
+  padding: 0 $baseline/4;
+}
+
+.divider{
+  margin: 0 0 10rem 0;
+
+  &.half {
+    margin: 0 0 5rem 0;
+  }
+
+  clear: both;
+}

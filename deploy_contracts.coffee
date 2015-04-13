@@ -95,7 +95,7 @@ async.series [
   for contract in contracts
     addresses[contract.name] = contract.address
 
-  fs.writeFileSync(process.cwd() + "/config/contracts.json", JSON.stringify(addresses), {flag: "w+"})
+  fs.writeFileSync(process.cwd() + "/config/addresses.json", JSON.stringify(addresses), {flag: "w+"})
 
   console.log "Done!"
 

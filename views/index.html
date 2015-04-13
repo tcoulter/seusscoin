@@ -1,5 +1,7 @@
 <%= include("templates/header") %>
 
+<input id="contracts" type="hidden" data-addresses="<%- JSON.stringify(config.addresses) %>"></input>
+
 <div class="top-wrapper">
 
   <div class="fork">
@@ -23,9 +25,9 @@
             This is an Ethereum app. What's Etheruem? <a href="#">See below!</a>
           </p>
           <p>
-            Since we're pre-genesis, we've gotta Scotch Tape some things together. Use <a href="https://github.com/ethereum/go-ethereum">geth</a> and connect to our network via our enode:
+            To ensure you can connect to our node, use <a href="https://github.com/ethereum/go-ethereum">geth</a> and connect to the <%= config.product_name %> network via our enode:
 
-            <pre>geth --networkid <%= config.public_eth.networkid %> -bootnodes="<%= config.public_eth.enode %>" -maxpeers 2 --unlock=primary</pre> 
+            <pre>geth -bootnodes="<%= config.public_eth.enode %>" --unlock=primary</pre> 
           </p>
           <button id="step1" class="charcoal fill">Done!</a>
         </div>
@@ -102,7 +104,7 @@
     <p>
       Ethereum's not officially released yet, so we won't be transacting on the same network. The only way for us to connect is to set it specifically, using our enode:
 
-      <pre>geth --networkid <%= config.public_eth.networkid %> -bootnodes="<%= config.public_eth.enode %>" -maxpeers 2 --unlock=primary</pre> 
+      <pre>geth -bootnodes="<%= config.public_eth.enode %>" --unlock=primary</pre> 
     </p>
 
     <h5>Will I still have my <%= config.product_name %> once everything's "post" genesis?</h5>

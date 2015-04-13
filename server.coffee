@@ -10,6 +10,7 @@ _ = require "lodash"
 process.env.NODE_ENV = "development" if !process.env.NODE_ENV?
 
 config = loadconfig("config/config.json")
+config.addresses = loadconfig("config/addresses.json")
 
 express = require 'express'
 app = express()

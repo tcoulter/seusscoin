@@ -14,5 +14,7 @@ module.exports = (relative_path, extra_config={}, relative=false) ->
 
   if file_contents[environment]?
     _.merge(config, file_contents[environment])
+  else
+    _.merge(config, file_contents)
 
   return _.merge(config, extra_config)

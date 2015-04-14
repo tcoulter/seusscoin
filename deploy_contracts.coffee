@@ -69,11 +69,11 @@ async.series [
         method: "eth_sendTransaction"
         params: [{
           from: coinbase
-          gas: web3.toHex(100000) # I have no idea if these values are good.
+          gas: web3.toHex(500000) # I have no idea if these values are good.
           gasPrice: web3.toHex(10000),
-          data: "0x#{code}"
+          data: code
         }]
-        id: 1
+        id: 2
       , (err, result) ->
         if err?
           callback(err, result)

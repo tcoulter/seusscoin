@@ -1,25 +1,24 @@
 {
-    "name": "seusscoin",
-    "version": "0.1.0",
-    "author": "Tim Coulter",
-    "devDependencies": {
-
-    },
-    "dependencies": {
-        "coffee-script": "*",
-        "compression": "*",
-        "response-time": "*",
-        "connect-timeout": "*",
-        "express-redis-cache": "*",
-        "body-parser": "*",
-        "morgan": "*",
-        "lodash": "*",
-        "async": "*",
-        "web3": "*",
-        "express": "*",
-        "node-sass": "*",
-        "clean-css": "*",
-        "uglify-js": "*",
-        "js-beautify": "*"
-    }
+  "name": "seusscoin",
+  "version": "0.1.0",
+  "author": "Tim Coulter",
+  "devDependencies": {},
+  "dependencies": {
+    "async": "*",
+    "body-parser": "*",
+    "clean-css": "*",
+    "coffee-script": "*",
+    "compression": "*",
+    "connect-timeout": "*",
+    "express": "*",
+    "express-redis-cache": "*",
+    "js-beautify": "*",
+    "lodash": "*",
+    "morgan": "*",
+    "node-sass": "*",
+    "response-time": "*",
+    "uglify-js": "*",
+    "web3": "*",
+    "xmlhttprequest": "^1.7.0"
+  }
 }

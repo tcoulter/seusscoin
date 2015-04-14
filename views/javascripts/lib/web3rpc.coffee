@@ -9,7 +9,13 @@ factory = (web3, XMLHttpRequest) ->
       constructor: (@message, @xhr) ->
         @name = "Web3RPC.RequestError"
 
+    # Allow ("127.0.0.1", "8080"), as well as ("127.0.0.1:8080")
     constructor: (@host, @port) ->
+      if !@port?
+        split = @host.split(":")
+        @host = split[0]
+        @port = split[1]
+
       @nonce = 0
 
     # method: RPC call method name, i.e., "eth_coinbase"
@@ -19,6 +25,9 @@ factory = (web3, XMLHttpRequest) ->
       if typeof params == "function"
         callback = params
         params = []
+
+      if !callback?
+        throw "send() must be passed a callback!"
 
       payload = 
         jsonrpc: "2.0"
@@ -56,29 +65,19 @@ factory = (web3, XMLHttpRequest) ->
     # Helper function for calling specific contract functions.
     # Use the contract() method instead of calling this function directly.
     #
+    # method: "eth_call" or "eth_sendTransaction"
     # fully_qualified_name: The name of the contract function you want to call.
     #     If you want to call sendCoin(address receiver, uint256 amount), for instance, 
     #     the fully_qualified_name will be "sendCoin(address,uint256)"
-    # address: Address of the contract.
     # abi:     ABI of the contract.
     # params:  (optional) Array of parameters you want to pass to the function.
+    # tx_params: Parameters of the call or transaction, like "to", "from", "gas", and "gasPrice"
     # block:   (optional) Block you want to query. Default is "latest"
     # callback: function(err, result) {}
-    call: (fully_qualified_name, address, abi, params=[], block="latest", callback) ->
-      if typeof block == "function"
-        callback = block
-        block = "latest"
-
-      if typeof params == "function"
-        callback = params
-        block = "latest"
-        params = []
-
-      if !(params instanceof Array)
-        callback = block
-        block = params
-        params = []
-
+    #
+    # These methods aren't meant to be used for adding new contract code to the network.
+    # use send() with the "eth_sendTransaction" method.
+    call_or_transact: (method="eth_call", fully_qualified_name, abi, params, tx_params, block, callback) ->
       prefix = fully_qualified_name.slice(0, fully_qualified_name.indexOf("("))
 
       @send "web3_sha3", [web3.fromAscii(fully_qualified_name)], (err, hex) =>
@@ -90,21 +89,20 @@ factory = (web3, XMLHttpRequest) ->
 
         parsed = web3.abi.inputParser(abi)[prefix].apply(null, params)
 
-        rpc_params = [
-          {
-            to: address
-            data: fn_identifier + parsed
-          }
-          block
-        ]
+        tx_params.data = fn_identifier + parsed
 
-        @send "eth_call", rpc_params, (err, result) ->
+        @send method, [tx_params, block], (err, result) ->
           if err?
             callback(err, result)
           else
-            callback(null, web3.abi.outputParser(abi)[prefix].call(null, result)[0])
+            if method == "eth_call"
+              # Return the result via the output parser
+              callback(null, web3.abi.outputParser(abi)[prefix].call(null, result)[0])
+            else
+              # We made a transaction, so just return the tx address that gets sent back.
+              callback(null, result)
 
-    # Get fully qualified function name from abi
+    # Get fully qualified function names from abi
     fullyQualifyNames: (abi) ->
       names = {}
       for fn in abi
@@ -132,14 +130,47 @@ factory = (web3, XMLHttpRequest) ->
         web3rpc: web3rpc
         constructor: (@address) ->
 
+      # If no callback function is passed to the callhandler, then 
+      # the code will assume you want to send this method as a transaction,
+      # and will return a transaction handler to process the request.
+      # This allows for the following syntax:
+      #
+      # myContract.sendCoin(receiver, amount).send({gas: 10000})
       createHandler = (fully_qualified_name, abi) =>
         web3rpc = @
         return () ->
-          throw "Function must be passed a callback!" if arguments.length < 1
-          args = Array.prototype.slice.call(arguments);
-          params = args.splice(0, args.length - 1)
-          callback = args[0]
-          web3rpc.call(fully_qualified_name, @address, abi, params, "latest", callback)
+          callfn = (method, params, tx_params, callback) =>
+            final_tx_params = {to: @address}
+
+            for key, value of tx_params
+              final_tx_params[key] = value
+
+            console.log fully_qualified_name
+
+            web3rpc.call_or_transact(method, fully_qualified_name, abi, params, final_tx_params, "latest", callback)
+
+          args = Array.prototype.slice.call(arguments)
+          callback = args[args.length - 1] if typeof args[args.length - 1] == "function"
+          
+          if callback?
+            # There's a callback, so don't send the callback
+            params = args.splice(0, args.length - 1)
+            callfn("eth_call", params, {}, callback)
+          else
+            params = args
+            # no callback, so return *another* function that will allow
+            # the user to send the transaction it.
+            return {
+              send: (tx_params={}, callback) =>
+                if typeof tx_params == "function"
+                  callback = tx_params
+                  tx_params = {}
+
+                if !callback?
+                  throw "send() function must be passed a callback!"
+
+                callfn("eth_sendTransaction", params, tx_params, callback)
+            }
 
       for prefix, fully_qualified_name of names
         Contract.prototype[prefix] = createHandler(fully_qualified_name, abi)

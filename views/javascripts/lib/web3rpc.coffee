@@ -54,14 +54,17 @@ factory = (web3, XMLHttpRequest) ->
       @nonce += 1
 
     # Helper function for calling specific contract functions.
-    # fn_name: The name of the contract function you want to call.
-    #          If you want to call getOwner(), fn_name would be "getOwner"
+    # Use the contract() method instead of calling this function directly.
+    #
+    # fully_qualified_name: The name of the contract function you want to call.
+    #     If you want to call sendCoin(address receiver, uint256 amount), for instance, 
+    #     the fully_qualified_name will be "sendCoin(address,uint256)"
     # address: Address of the contract.
     # abi:     ABI of the contract.
     # params:  (optional) Array of parameters you want to pass to the function.
     # block:   (optional) Block you want to query. Default is "latest"
     # callback: function(err, result) {}
-    call: (fn_name, address, abi, params=[], block="latest", callback) ->
+    call: (fully_qualified_name, address, abi, params=[], block="latest", callback) ->
       if typeof block == "function"
         callback = block
         block = "latest"
@@ -76,22 +79,7 @@ factory = (web3, XMLHttpRequest) ->
         block = params
         params = []
 
-      # Get function name from abi
-      fully_qualified_name = null
-
-      for item in abi
-        continue if item.name != fn_name
-        
-        fully_qualified_name = fn_name + "("
-
-        for input in item.inputs
-          fully_qualified_name += input.type + ","
-
-        # Remove the last comma
-        fully_qualified_name = fully_qualified_name.slice(0, fully_qualified_name.length - 1)
-        fully_qualified_name += ")"
-
-      throw "Couldn't find function for #{fn_name}!" if fully_qualified_name == null
+      prefix = fully_qualified_name.slice(0, fully_qualified_name.indexOf("("))
 
       @send "web3_sha3", [web3.fromAscii(fully_qualified_name)], (err, hex) =>
         if err?
@@ -100,7 +88,7 @@ factory = (web3, XMLHttpRequest) ->
 
         fn_identifier = hex.slice(0, 10)
 
-        parsed = web3.abi.inputParser(abi)[fn_name].apply(null, params)
+        parsed = web3.abi.inputParser(abi)[prefix].apply(null, params)
 
         rpc_params = [
           {
@@ -114,7 +102,49 @@ factory = (web3, XMLHttpRequest) ->
           if err?
             callback(err, result)
           else
-            callback(null, web3.abi.outputParser(abi)[fn_name].call(null, result)[0])
+            callback(null, web3.abi.outputParser(abi)[prefix].call(null, result)[0])
+
+    # Get fully qualified function name from abi
+    fullyQualifyNames: (abi) ->
+      names = {}
+      for fn in abi
+        fully_qualified_name = fn.name + "("
+
+        for input in fn.inputs
+          fully_qualified_name += input.type + ","
+
+        # Remove the last comma
+        if fn.inputs.length > 0
+          fully_qualified_name = fully_qualified_name.slice(0, fully_qualified_name.length - 1)
+
+        fully_qualified_name += ")"
+
+        names[fn.name] = fully_qualified_name
+
+      names
+
+    contract: (abi) ->
+      names = @fullyQualifyNames(abi)
+
+      web3rpc = @
+
+      class Contract
+        web3rpc: web3rpc
+        constructor: (@address) ->
+
+      createHandler = (fully_qualified_name, abi) =>
+        web3rpc = @
+        return () ->
+          throw "Function must be passed a callback!" if arguments.length < 1
+          args = Array.prototype.slice.call(arguments);
+          params = args.splice(0, args.length - 1)
+          callback = args[0]
+          web3rpc.call(fully_qualified_name, @address, abi, params, "latest", callback)
+
+      for prefix, fully_qualified_name of names
+        Contract.prototype[prefix] = createHandler(fully_qualified_name, abi)
+
+      Contract
 
   return Web3RPC
 

@@ -1,11 +1,13 @@
 contract SeussCoin { 
   address public owner;
-  uint public freeAmount;
+  uint public initialFreeAmount;
+  uint public defaultFreeAmount;
   mapping (address => uint) public balance;
   mapping (address => uint) public lastFreeRequest;
 
   function SeussCoin() {
-    freeAmount = 1;
+    initialFreeAmount = 5;
+    defaultFreeAmount = 1;
     owner = msg.sender;
     balance[owner] = 20000;
   }
@@ -15,22 +17,31 @@ contract SeussCoin {
   }
 
   function requestFreeSeussCoin() returns(bool successful) {
-    // Ensure the sender hasn't requested free SEUSSCOIN within the last
-    // day. This assumes 12 second block times, roughly 7200 blocks per day.
-    if (lastFreeRequest[msg.sender] == 0 || lastFreeRequest[msg.sender] <= block.number - 7200) {
-      return moveCoin(owner, msg.sender, freeAmount);
+    // Has the sender requested free SEUSSCOIN ever? No? Give them "a lot"
+    if (lastFreeRequest[msg.sender] == 0) {
+      lastFreeRequest[msg.sender] = block.number;
+      return moveCoin(owner, msg.sender, initialFreeAmount);
+    }
+
+    // Has the sender requested free SEUSSCOIN within the last
+    // day? No? Give them a little. This assumes 12 second block times, 
+    // roughly 7200 blocks per day. Use signed ints to prevent wrapping.
+    if (int256(lastFreeRequest[msg.sender]) <= int256(block.number) - 7200) {
+      lastFreeRequest[msg.sender] = block.number;
+      return moveCoin(owner, msg.sender, defaultFreeAmount);
     }
 
     return false;
   }
 
   // Administrative function.
-  function updateFreeAmount(uint newFreeAmount) returns(bool successful){
+  function updateFreeAmount(uint newInitialFreeAmount, uint newDefaultFreeAmount) returns(bool successful){
     if (msg.sender != owner) {
       return false;
     }
 
-    freeAmount = newFreeAmount;
+    initialFreeAmount = newInitialFreeAmount;
+    defaultFreeAmount = newDefaultFreeAmount;
     return true;
   }
 

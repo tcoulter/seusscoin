@@ -22,14 +22,14 @@
         <div id="open_step" class="step current">
           <strong><%= config.product_name %> WALLET</strong>
           <p>
-            Enter your Ethereum client details to&nbsp;get&nbsp;started. <a href="#">Huh?</a>
+            Enter your Ethereum client details to&nbsp;get&nbsp;started. <a id="huh" href="#">Huh?</a>
           </p>
           <label id="client_host_label" for="client_host">Ethereum Client's Web Address</label>
           <input id="client_host" type="text" placeholder="Example: 127.0.0.1:8545"></input>
           <br>
           <label id="client_address_label" for="client_address">Your Ethereum Address</label>
           <input id="client_address" type="text" placeholder="Example: 49359db8df16e2d4e1a4c60ad16bace135ed6ff9"></input>
-          <button id="open_wallet" class="charcoal fill">Open Wallet</button></input><div class="use_coinbase_wrapper"><input id="use_coinbase" checked="checked" type="checkbox"><div>Use client's primary address</div></div>
+          <button id="open_wallet" class="charcoal fill">Open Wallet</button></input><div class="use_coinbase_wrapper"><input id="use_coinbase" checked="checked" type="checkbox"><div>Use primary address</div></div>
         </div>
         <div id="balance_step" class="step">
           <div class="white-wrapper">
@@ -62,9 +62,11 @@
     </div>
   </div>
 
+  <div class="scroll-down"href="#"><div>Learn More&nbsp;</div><div class="arrow">&darr;</div></div><!--div class="arrow">&ltcc;</div-->
+
 </div> <!-- /top-wrapper -->
 
-<div class="divider"></div>
+<div id="faq" class="divider"></div>
 
 <div class="container">
   <div class="twelve columns">
@@ -111,9 +113,9 @@
       Well, in this case, it slowly provides you with free <%= config.product_name %>. If you start the app (see above), you can click a button and get 0.25 <%= config.product_name %> free per day!
     </p>
 
-    <h5>What's all this talk about "pre-genesis"?</h5>
+    <h5>I'm having trouble connecting to your client.</h5>
     <p>
-      Ethereum's not officially released yet, so we won't be transacting on the same network. The only way for us to connect is to set it specifically, using our enode:
+      Ethereum's not officially released yet, so it's likely our nodes aren't transacting on the same network. To ensure they are, make sure your node is connecting to the official test network (i.e., network id of 0), and then tell your node to connect to mine via the enode, like below. Make sure to unlock the address you'll be using or else it's likely your transactions won't go through:
 
       <pre>geth -bootnodes="<%= config.public_eth.enode %>" --unlock=primary</pre> 
     </p>

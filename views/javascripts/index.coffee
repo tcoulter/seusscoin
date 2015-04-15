@@ -61,7 +61,6 @@ App.add "/", () ->
     web3rpc = new Web3RPC(client_host)
     web3rpc.send "eth_coinbase", (error, result) ->
       if error?
-        console.log error
         Button.setFailure(openWallet)
       else
         Button.setSuccess(openWallet)
@@ -85,6 +84,7 @@ App.add "/", () ->
         seuss.balance localStorage.getItem("client_address"), (error, result) ->
           $("#balance").html(numberWithCommas(result.valueOf()))
 
+          watchBalance()
           nextStep()
 
   openWallet.on "click", () ->
@@ -140,6 +140,7 @@ App.add "/", () ->
         nextStep("balance_step")
 
   close.on "click", () ->
+    stopWatchingBalance()
     nextStep("open_step")
 
   # If there's an address saved, populate the text box with it.
@@ -149,8 +150,29 @@ App.add "/", () ->
 
     # If there's also a host (which there should be), test the connection.
     if localStorage.hasOwnProperty("client_host") && localStorage.hasOwnProperty("client_address")
+      clientHost.val(localStorage.getItem("client_host")) 
+      clientAddress.val(localStorage.getItem("client_address").replace("0x", ""))
       testConnection()
     
+
+  watchInterval = null
+  watchBalance = () ->
+    watchInterval = setInterval () ->
+      seuss.balance localStorage.getItem("client_address"), (error, result) ->
+        $("#balance").html(numberWithCommas(result.valueOf()))
+    , 3000
+
+  stopWatchingBalance = () ->
+    clearInterval(watchInterval)
+
+  scrollToFaq = (e) ->
+    e.preventDefault()
+    $('html, body').animate({
+        scrollTop: $("#faq").offset().top
+    }, 1000);
+
+  $(".scroll-down").on "click", scrollToFaq
+  $("#huh").on "click", scrollToFaq
 
 
 

@@ -157,4 +157,34 @@
   #sendcoin, #enter_address, #finalize {
     float: right;
   }
+
+  .scroll-down {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: normal;
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    text-align: center;
+    transform: translateX(-50%);
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+
+    .arrow {
+      position: relative;
+      top: -0.2rem;
+      font-size: 2rem;
+    }
+
+    div {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    &:hover {
+      text-decoration: none;
+      color: $charcoal;
+    }
+  }
 }

@@ -10,20 +10,24 @@
   },
   "development": {
     "private_eth": {
-      "host": "172.17.0.56",
+      "host": "172.17.0.57",
       "port": "8545"
     },
     "public_eth": {
       "networkid": "12345",
-      "host": "172.17.0.56",
+      "host": "172.17.0.57",
       "port": "8545",
       "enode": "enode://6f8a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@54.169.166.226:30303"
     }
   },
   "production": {
+    "private_eth": {
+      "host": "172.17.0.57",
+      "port": "8545"
+    },
     "public_eth": {
       "networkid": "12345",
-      "host": "172.17.0.56",
+      "host": "172.17.0.57",
       "port": "8545",
       "enode": "enode://6f8a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@54.169.166.226:30303"
     },

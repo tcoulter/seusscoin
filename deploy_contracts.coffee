@@ -96,13 +96,15 @@ async.series [
 ], (err) ->
   console.log "Writing contract config..."
 
+  environment = process.env.NODE_ENV || "development"
+
   addresses = {}
   for contract in contracts
     addresses[contract.name] = 
       address: contract.address
       abi: contract.abi
 
-  fs.writeFileSync(process.cwd() + "/config/contracts.json", JSON.stringify(addresses), {flag: "w+"})
+  fs.writeFileSync(process.cwd() + "/config/#{environment}/contracts.json", JSON.stringify(addresses), {flag: "w+"})
 
   console.log "Done!"
 

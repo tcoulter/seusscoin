@@ -46,6 +46,10 @@ ENV TERM xterm
 # Create the init script for running geth.
 # When the container is run, it expects an environment variable called $PASSWORD
 # which will be used for the account password.
+
+# WARNING: This is good for the test network, but not for the real network!
+#          You have been warned!
+
 RUN mkdir /etc/service/geth \
     && touch /etc/service/geth/run \
     && printf '#!/bin/bash\n' >> /etc/service/geth/run \

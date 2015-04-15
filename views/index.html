@@ -19,34 +19,45 @@
       </div>
 
       <div class="seven columns stepbox">
-        <div class="step current">
-          <strong>Hello. Before we get started...</strong>
-          <p> 
-            This is an Ethereum app. What's Etheruem? <a href="#">See below!</a>
-          </p>
+        <div id="open_step" class="step current">
+          <strong><%= config.product_name %> WALLET</strong>
           <p>
-            To ensure you can connect to our node, use <a href="https://github.com/ethereum/go-ethereum">geth</a> and connect to the <%= config.product_name %> network via our enode:
+            Enter your Ethereum client details to&nbsp;get&nbsp;started. <a href="#">Huh?</a>
+          </p>
+          <label id="client_host_label" for="client_host">Ethereum Client's Web Address</label>
+          <input id="client_host" type="text" placeholder="Example: 127.0.0.1:8545"></input>
+          <br>
+          <label id="client_address_label" for="client_address">Your Ethereum Address</label>
+          <input id="client_address" type="text" placeholder="Example: 49359db8df16e2d4e1a4c60ad16bace135ed6ff9"></input>
+          <button id="open_wallet" class="charcoal fill">Open Wallet</button></input><div class="use_coinbase_wrapper"><input id="use_coinbase" checked="checked" type="checkbox"><div>Use client's primary address</div></div>
+        </div>
+        <div id="balance_step" class="step">
+          <div class="white-wrapper">
+            <div class="close">&otimes;</div>
+            <h3 id="balance"></h3>
+            <span><%= config.product_name %> Balance</span>
+          </div>
+          <button id="sendcoin" class="charcoal fill">Send Coin</button><button id="request_from_faucet" class="white">Get Free Coin!</button> 
+        </div>
+        <div id="amount_step" class="step">
+          <div class="white-wrapper">
+            <div class="send-amount-wrapper">
+              <input id="send_amount" type="text"></input>
+            </div>
+            <span>Enter Amount</span>
+          </div>
+          <button id="enter_address" class="charcoal fill">Next</button><button class="charcoal cancel">Cancel</button> 
+        </div>
+        <div id="address_step" class="step">
+          <div class="white-wrapper">
+            <div class="send-amount-wrapper">
+              <input id="send_address" type="text"></input>
+            </div>
+            <span>Enter Receiver Address</span>
+          </div>
+          <button id="finalize" class="charcoal fill">Finalize</button><button class="charcoal cancel">Cancel</button> 
+        </div>
 
-            <pre>geth -bootnodes="<%= config.public_eth.enode %>" --unlock=primary</pre> 
-          </p>
-          <button id="step1" class="charcoal fill">Done!</a>
-        </div>
-        <div class="step">
-          <strong>Next, tell use how you connect to Ethereum.</strong>
-          <p>
-            Your web browser will use this information to make transactions on your behalf. No information is sent to <%= config.product_name %> servers.
-          </p>
-          <input id="input" type="text" placeholder="Example: 127.0.0.1:8545"></input>
-          <button id="step2" class="charcoal fill">Test Connection</button>
-        </div>
-        <div class="step">
-          <strong>Next, tell use how you connect to Ethereum.</strong>
-          <p>
-            Your web browser will use this information to make transactions on your behalf. No information is sent to <%= config.product_name %> servers.
-          </p>
-          <input id="input" type="text" placeholder="127.0.0.1:8454"></input>
-          <button id="step2" class="charcoal fill">Next</button>
-        </div>
       </div>
     </div>
   </div>

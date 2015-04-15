@@ -57,7 +57,104 @@
     margin-bottom: 5rem;
   }
 
-  #input {
+  #client_host, #client_address {
     width: 100%;
+  }
+
+  #client_address, #client_address_label, #client_host_label {
+    display: none;
+  }
+
+  #use_coinbase {
+    cursor: pointer;
+  }
+
+  .use_coinbase_wrapper {
+    cursor: pointer;
+    white-space: nowrap;
+    float: right;
+    height: 38px; /* Same as button. */
+    line-height: 38px;
+
+    div {
+      margin-left: 0.5rem;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+
+  #open_wallet {
+    margin-right: 1rem;
+  }
+
+  #balance, #send_amount {
+    color: $charcoal;
+    font-weight: bold;
+    padding-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    border-bottom: dashed 1px $gray;
+    font-size: 3.6rem;
+  }
+
+  .send-amount-wrapper {
+    line-height: 4.6rem;
+    height: 4.6rem;
+    border-bottom: dashed 1px $gray;
+    padding: 0 0 1rem 0;
+    margin: 0 0 0.5rem 0;
+  }
+
+  #send_amount, #send_address {
+    letter-spacing: -.1rem;
+    box-sizing: content-box;
+    position: relative;
+    top: -0.8rem;
+    height: 5.6rem;
+    color: $charcoal;
+    font-weight: bold;
+    border: none;
+    font-size: 3.6rem;
+    border-radius: 0px;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+
+    &:focus {
+      outline: none;
+      border: none;
+    }
+  }
+
+  #send_address {
+    font-size: 1.6rem;
+    height: 3.6rem;
+    top: 1.2rem;
+  }
+
+  .white-wrapper {
+    position: relative;
+    padding: 2rem;
+    box-shadow: inset 0px 0px 5px darkgray;
+    border-radius: 1rem;
+    background: white;
+    margin-bottom: 1rem;
+
+    .close {
+      position: absolute;
+      right: 1.5rem;
+      top: 0.5rem;
+      font-size: 2.5rem;
+      font-weight: normal;
+      color: $gray;
+      cursor: pointer;
+
+      &:hover {
+        color: $red;
+      }
+    }
+  }
+
+  #sendcoin, #enter_address, #finalize {
+    float: right;
   }
 }

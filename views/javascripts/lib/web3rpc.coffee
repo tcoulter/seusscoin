@@ -27,7 +27,7 @@ factory = (web3, XMLHttpRequest) ->
         params = []
 
       if !callback?
-        throw "send() must be passed a callback!"
+        throw "send() function must be passed a callback!"
 
       payload = 
         jsonrpc: "2.0"
@@ -122,8 +122,6 @@ factory = (web3, XMLHttpRequest) ->
       names
 
     contract: (abi) ->
-      names = @fullyQualifyNames(abi)
-
       web3rpc = @
 
       class Contract
@@ -145,8 +143,6 @@ factory = (web3, XMLHttpRequest) ->
             for key, value of tx_params
               final_tx_params[key] = value
 
-            console.log fully_qualified_name
-
             web3rpc.call_or_transact(method, fully_qualified_name, abi, params, final_tx_params, "latest", callback)
 
           args = Array.prototype.slice.call(arguments)
@@ -161,6 +157,16 @@ factory = (web3, XMLHttpRequest) ->
             # no callback, so return *another* function that will allow
             # the user to send the transaction it.
             return {
+              call: (tx_params={}, callback) =>
+                if typeof tx_params == "function"
+                  callback = tx_params
+                  tx_params = {}
+
+                if !callback?
+                  throw "call() function must be passed a callback!"
+
+                callfn("eth_call", params, tx_params, callback)
+
               send: (tx_params={}, callback) =>
                 if typeof tx_params == "function"
                   callback = tx_params
@@ -172,6 +178,8 @@ factory = (web3, XMLHttpRequest) ->
                 callfn("eth_sendTransaction", params, tx_params, callback)
             }
 
+      names = @fullyQualifyNames(abi)
+      
       for prefix, fully_qualified_name of names
         Contract.prototype[prefix] = createHandler(fully_qualified_name, abi)
 

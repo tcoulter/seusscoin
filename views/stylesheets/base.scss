@@ -90,13 +90,19 @@ body {
 
 
 .logo {
-  position: fixed;
+  position: absolute;
   left: 2rem;
   top: 1rem;
   font-weight: 800;
   font-size: 2.4rem;
   color: $white;
   text-shadow: 3px 0px 3px rgba(0,0,0,0.2);
+}
+
+@media (min-width: 1000px) {
+  .logo {
+    position: fixed;
+  }
 }
 
 /* To size a dynamically size seusscoin, specify an equal width and height in rem: */

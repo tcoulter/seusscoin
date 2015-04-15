@@ -6,7 +6,7 @@ config = loadconfig("./config/config.json")
 create = () ->
   # Cache in prod, not in development.
   if process.env.NODE_ENV == "production"
-    cache = require('express-redis-cache')
+    cache = require('express-redis-cache')()
   else
     cache =
       route: () ->

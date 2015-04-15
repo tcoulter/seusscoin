@@ -1,10 +1,12 @@
 #!/usr/bin/env ./node_modules/.bin/coffee
 
+process.env.NODE_ENV = "production"
+
 express = require "express"
 async = require "async"
 fs = require "fs"
 loadconfig = require "./lib/loadconfig"
-
+cache = require "./lib/cache"
 config = loadconfig("config/config.json")
 
 app = express()
@@ -19,10 +21,11 @@ app.engine "xml", require("./lib/render/default")(app)
 app.engine "js", require("./lib/render/js")(app)
 app.set("view engine", "html")
 
-files = [
-  "/site.css"
-  "/site.js"
-]
+# "request path": "render path"
+files = {
+  "/site.css?v=#{config.asset_version}": "site.scss"
+  "/site.js?v=#{config.asset_version}": "site.js"
+}
 
 # Ensure caching.
 process.env.NODE_ENV = "production"
@@ -31,14 +34,22 @@ process.env.NODE_ENV = "production"
 # -- this is a trade off for render time. If the files
 # render successfully, then they'll be placed in the 
 # redis cache forrrrevvvverrrr. 
-async.eachSeries files, (file, callback) ->
-  console.log "Rendering #{file}..."
+async.eachSeries Object.keys(files), (request_path, callback) ->
+  file = files[request_path]
+  console.log "Rendering #{request_path}..."
   app.render file, (err, body) ->
     if err
       throw err
-      exit(1)
+      process.exit(1)
 
-    cache.add config.cache_prefix + file, body, (cache_err, added) ->
+    cache.add request_path, body, (cache_err, added) ->
       if cache_err
         throw cache_err
-        exit(1)
+        process.exit(1)
+
+      console.log "Added: #{added}"
+      callback()
+
+, () ->
+  console.log "Done!"
+  process.exit(0)

@@ -7,6 +7,7 @@ async = require "async"
 fs = require "fs"
 loadconfig = require "./lib/loadconfig"
 cache = require "./lib/cache"
+mime = require "mime"
 config = loadconfig("config/config.json")
 
 app = express()
@@ -23,8 +24,14 @@ app.set("view engine", "html")
 
 # "request path": "render path"
 files = {
-  "/site.css?v=#{config.asset_version}": "site.scss"
-  "/site.js?v=#{config.asset_version}": "site.js"
+  "/site.css?v=#{config.asset_version}": {
+    file: "site.scss"
+    type: mime.lookup(".css")
+  },
+  "/site.js?v=#{config.asset_version}": {
+    file: "site.js"
+    type: mime.lookup(".js")
+  }
 }
 
 # Ensure caching.
@@ -35,14 +42,14 @@ process.env.NODE_ENV = "production"
 # render successfully, then they'll be placed in the 
 # redis cache forrrrevvvverrrr. 
 async.eachSeries Object.keys(files), (request_path, callback) ->
-  file = files[request_path]
+  entry = files[request_path]
   console.log "Rendering #{request_path}..."
-  app.render file, (err, body) ->
+  app.render entry.file, (err, body) ->
     if err
       throw err
       process.exit(1)
 
-    cache.add request_path, body, (cache_err, added) ->
+    cache.add request_path, body, {type: entry.type}, (cache_err, added) ->
       if cache_err
         throw cache_err
         process.exit(1)

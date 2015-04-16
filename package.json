@@ -19,6 +19,7 @@
     "response-time": "*",
     "uglify-js": "*",
     "web3": "*",
-    "xmlhttprequest": "^1.7.0"
+    "xmlhttprequest": "^1.7.0",
+    "mime": "*"
   }
 }

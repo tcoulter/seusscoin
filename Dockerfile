@@ -33,3 +33,5 @@ RUN cd /src \
 RUN mkdir -p /etc/service/seusscoin \
     && cp /src/config/run.sh /etc/service/seusscoin/run 
 
+EXPOSE 80
+

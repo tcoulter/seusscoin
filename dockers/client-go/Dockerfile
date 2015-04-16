@@ -55,7 +55,7 @@ RUN mkdir /etc/service/geth \
     && printf '#!/bin/bash\n' >> /etc/service/geth/run \
     && printf 'echo $PASSWORD > /passwordfile \n' >> /etc/service/geth/run \
     && printf 'geth --password=/passwordfile account new \n' >> /etc/service/geth/run \
-    && printf "geth --password=/passwordfile --nodekeyhex='88b5b1e92c44067431181f8986600933f272c108ae2dd7ae98ba1fddbb1dca59' --mine -rpc=true -rpcport=8545 --rpccorsdomain='*'  --rpcaddr='\`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'\`' --vmdebug" >> /etc/service/geth/run \
+    && printf "geth --password=/passwordfile --nodekeyhex='88b5b1e92c44067431181f8986600933f272c108ae2dd7ae98ba1fddbb1dca59' --mine --unlock=primary -rpc=true -rpcport=8545 --rpccorsdomain='*'  --rpcaddr=\"\`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'\`\" " >> /etc/service/geth/run \
     && chmod 755 /etc/service/geth/run
 
 # Expose the p2p port.

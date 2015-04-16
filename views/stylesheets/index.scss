@@ -9,8 +9,11 @@
   }
 
   .top-wrapper {
+    display: -webkit-flex;
     display: flex;
+    -webkit-align-items: center;
     align-items: center;
+    -webkit-justify-content: center;
     justify-items: center;
     height: 100%;
 
@@ -36,9 +39,13 @@
   }
 
   .first {
+    display: -webkit-flex;
     display: flex;
+    -webkit-align-items: center;
     align-items: center;
+    -webkit-justify-content: center;
     justify-content: center;
+    -webkit-box-wrap: wrap;
     flex-wrap: wrap;
   }
 

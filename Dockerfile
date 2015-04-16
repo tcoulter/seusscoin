@@ -17,10 +17,18 @@ RUN apt-get install -y software-properties-common \
     && apt-get -y upgrade \
     && apt-get install -y nodejs git build-essential nano python2.7 redis-server solc
 
-ADD ./ /src/
+RUN mkdir -p /etc/service/redis \
+    && ln -s /usr/bin/redis-server /etc/service/redis/run 
+
+# This is a workaround, to make sure that docker's cache is invalidated whenever the git repo changes.
+ADD https://api.github.com/repos/tcoulter/seusscoin/git/refs/heads/master file_does_not_exist
+
+RUN git clone https://github.com/tcoulter/seusscoin /src
 
 RUN cd /src \
     && npm install 
+    #&& ./compile_assets.coffee
+    #&& killall redis-server
 
 RUN mkdir -p /etc/service/seusscoin \
     && cp /src/config/run.sh /etc/service/seusscoin/run 

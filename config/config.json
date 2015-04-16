@@ -3,7 +3,7 @@
     "product_name": "SEUSSCOIN",
     "host": "seusscoin.com",
     "cdn": "http://seusscoin.com",
-    "asset_version": "4",
+    "asset_version": "5",
     "font_dir": "/fonts",
     "image_dir": "/images",
     "private_eth": {

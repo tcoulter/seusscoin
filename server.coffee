@@ -31,6 +31,21 @@ app.engine "xml", require("./lib/render/default")(app)
 app.engine "js", require("./lib/render/js")(app)
 app.set("view engine", "html")
 
+app.use (req, res, next) ->
+  path = req._parsedUrl.path
+
+  origin = req.headers["origin"]
+  allow = "https://#{config.host}"  
+
+  # Cheap way of checking to see if the host "ends with" bitcoinindex.es (and not just "contains")
+  if (origin + "/").indexOf("#{config.host}/") >= 0
+    allow = "*" # req.protocol + "://" + origin
+
+  res.header("Access-Control-Allow-Origin", allow)
+  res.header("X-Frame-Options", "SAMEORIGIN")
+
+  next()
+
 # HACK: Overwriting render function to inject default render options.
 # This likely isn't the best way to pass variables, but... eh.
 app.use (req, res, next) ->

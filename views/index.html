@@ -96,8 +96,8 @@
       Currently, Tim accepts <%= config.product_name %> for the following items:
 
       <ul>
-        <li>5 <%= config.product_name %> = 1 beer</li>
-        <li>10 <%= config.product_name %> = 1 pizza</li>
+        <li>10 <%= config.product_name %> = a beer</li>
+        <li>20 <%= config.product_name %> = a pizza</li>
       </ul>
 
       Other <%= config.product_name %> trades may become available, so keep checking in!
@@ -105,24 +105,17 @@
 
     <h5>How can I get <%= config.product_name %>?</h5>
     <p>
-      You can do something nice for Tim, or get some free from <a href="#">the faucet</a>.
+      You can do something nice for Tim, or get some free from the faucet.
     </p>
 
     <h5>What's a faucet?</h5>
     <p>
-      Well, in this case, it slowly provides you with free <%= config.product_name %>. If you start the app (see above), you can click a button and get 0.25 <%= config.product_name %> free per day!
+      Well, in this case, it's a button that slowly provides you with free <%= config.product_name %>! If you start the app (see above), you can click it to get 5 free <%= config.product_name %>. Even better, you use that button to continue getting get 1 free <%= config.product_name %>per day.
     </p>
 
-    <h5>I'm having trouble connecting to your client.</h5>
+    <h5>Ethereum's not officially released. What will happen to my <%= config.product_name %> when it goes live?</h5>
     <p>
-      Ethereum's not officially released yet, so it's likely our nodes aren't transacting on the same network. To ensure they are, make sure your node is connecting to the official test network (i.e., network id of 0), and then tell your node to connect to mine via the enode, like below. Make sure to unlock the address you'll be using or else it's likely your transactions won't go through:
-
-      <pre>geth -bootnodes="<%= config.public_eth.enode %>" --unlock=primary</pre> 
-    </p>
-
-    <h5>Will I still have my <%= config.product_name %> once everything's "post" genesis?</h5>
-    <p>
-      Unfortunately no. So spend your <%= config.product_name %> now!
+      Unfortunately, it disappears (but you can start accruing <%= config.product_name %>). So spend it now!
     </p>
 
     <h5>That sucks. Alright, so what's Seuss?</h5>
@@ -132,10 +125,7 @@
 
     <h5>Why did you make this site about your girlfriend's cat?</h5>
     <p>
-      Because I needed to try my hand at building a distributed Ethereum-based application. Also, Seuss isn't a very accepting cat. Maybe she'll come around if we all accept Seuss(coin) first!
-    </p>
-    <p>
-      Also, Tim may just give you free <%= config.product_name %> to promote the Ethereum network as well as initiate good times between friends and coworkers.
+      Because I needed to try my hand at building a distributed Ethereum-based application, top to bottom. Also, that picture of Seuss was pretty good.
     </p>
 
     <h5>Isn't the Ethereum network about decentralization and less trust? Do I have to trust Tim?</h5>

@@ -1,6 +1,6 @@
 :warning: :warning: :warning: 
 
-This is a blast from the past. A historical data point for the code that eventually became the foundation of [Truffle](https://truffleframework.com). Don't use, but feel free to peruse. Use Truffle instead. :) -- Tim
+This is a blast from the past. A historical data point for the code that eventually became the foundation of [Truffle](https://truffleframework.com). Don't use it, but feel free to peruse. Use Truffle instead. :) -- Tim
 
 # SEUSSCOIN
 
